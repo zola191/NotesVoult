@@ -7,7 +7,7 @@ Mapping данных в ASP.NET (и ASP.NET Core) — это процесс пр
 
 ## Как происходит mapping?
 
-### 1. **Ручной маппинг**
+### 1.1 **Ручной маппинг**
 #### Когда использовать:
 - Для простых моделей.
 - В высоконагруженных системах, где важно минимизировать накладные расходы.
@@ -22,9 +22,11 @@ public static CategoryDto ToDto(Category entity) => new()
 };
 ```
 
-**Плюсы:**
-- Максимальная производительность
-- Полный контроль над логикой
+### **1.2 Record Types (C# 9+)**
+**Идеально для:**
+- Неизменяемых моделей
+- Value-объектов
+
 
 ```csharp
 public record CategoryDto(Guid Id, string Name, string Description);
@@ -33,9 +35,6 @@ public record CategoryDto(Guid Id, string Name, string Description);
 var dto = new CategoryDto(entity.Id, entity.Name, entity.Description);
 ```
 
-**Идеально для:**
-- Неизменяемых моделей
-- Value-объектов
 
 
 
