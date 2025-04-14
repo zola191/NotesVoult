@@ -28,3 +28,29 @@ finally
 | throw;                  | ✅ Да                                    | Если нужно просто пробросить исключение дальше |
 | throw ex;               | ❌ Нет (перезаписывает стектрейс)        | Почти никогда (теряет контекст ошибки)         |
 | throw new CustomEx(ex); | ✅ (если передать ex как innerException) | Если нужно обернуть исключение в кастомный тип |
+- **Ловить** → если можно обработать ошибку на месте (например, вернуть `404` при отсутствии записи).
+    
+- **Пробрасывать** → если ошибка критическая и её должна обработать глобальная middleware.
+
+В ASP.NET Core можно перехватывать все необработанные исключения через **Middleware**:
+
+```csharp
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var exceptionHandler = context.Features.Get<IExceptionHandlerFeature>();
+        var exception = exceptionHandler?.Error;
+        
+        _logger.LogError(exception, "Global exception");
+        
+        context.Response.StatusCode = exception switch
+        {
+            NotFoundException => 404,
+            _ => 500
+        };
+        
+        await context.Response.WriteAsJsonAsync(new { error = exception?.Message });
+    });
+});
+```
