@@ -55,6 +55,18 @@ app.UseExceptionHandler(errorApp =>
 
 В асинхронных методах исключения **не теряются**, но их нужно правильно ловить:
 
+```csharp
+try
+{
+    await SomeAsyncMethod();
+}
+catch (Exception ex) // Сработает, даже если исключение было в асинхронном коде
+{
+    _logger.LogError(ex, "Async error");
+    throw;
+}
+```
+
 Можно создавать свои типы исключений для разных сценариев:
 ```csharp
 public class NotFoundException : Exception
