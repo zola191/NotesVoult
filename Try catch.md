@@ -70,9 +70,19 @@ catch (Exception ex) // Сработает, даже если исключени
 
 Если вызвать их в синхронном коде — исключение оборачивается в `AggregateException`.
 
-```ch
+```csharp
+// Плохо в синхронном коде:
+try 
+{
+    SomeAsyncMethod().Wait(); // Исключение будет AggregateException!
+}
+catch (AggregateException ex) 
+{
+    var innerEx = ex.InnerException; // Настоящая ошибка внутри
+}
 ```
 
+итого нужно использовать `async/await` везде, где можно.
 
 Можно создавать свои типы исключений для разных сценариев:
 ```csharp
