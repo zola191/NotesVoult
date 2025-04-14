@@ -50,5 +50,15 @@ public async Task UpdatePatientAsync(Patient patient, PatientData newData)
 
 #### **❌ Проблема на примере:**
 ```csharp
-
+// Плохо: CalculateMetrics() выполнится ВСЕГДА, даже если Debug-логи отключены!
+_logger.LogDebug($"Performance metrics: {CalculateMetrics()}");
+```
+#### **✅ Решение: Проверка уровня логирования**
+```csharp
+// Хорошо: Проверяем, включён ли Debug, ДО вычислений
+if (_logger.IsEnabled(LogLevel.Debug)) 
+{
+    var metrics = CalculateMetrics(); // Тяжёлая операция
+    _logger.LogDebug("Performance metrics: {@Metrics}", metrics);
+}
 ```
