@@ -41,13 +41,53 @@ var dto = new CategoryDto(entity.Id, entity.Name, entity.Description);
 ### **2.1 Паттерн Builder**
 
 ```csharp
-public class CategoryDtoBuilder 
+public class Category // Entity
 {
-    private Guid _id;
-    private string _name = null!;
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+}
 
-    public CategoryDtoBuilder WithId(Guid id) { _id = id; return this; }
-    public CategoryDto Build() => new(_id, _name);
+public class CategoryDto // DTO
+{
+    public Guid Id { get; private set; }
+    public string Name { get; private set; }
+    public string Description { get; private set; }
+
+    // Приватный конструктор
+    private CategoryDto() {} 
+
+    // Builder
+    public class Builder 
+    {
+        private readonly CategoryDto _dto = new();
+
+        public Builder WithId(Guid id) 
+        {
+            _dto.Id = id;
+            return this;
+        }
+
+        public Builder WithName(string name) 
+        {
+            _dto.Name = name ?? throw new ArgumentNullException(nameof(name));
+            return this;
+        }
+
+        public Builder WithDescription(string description) 
+        {
+            _dto.Description = description;
+            return this;
+        }
+
+        public CategoryDto Build() 
+        {
+            if (string.IsNullOrEmpty(_dto.Name))
+                throw new InvalidOperationException("Name is required");
+
+            return _dto;
+        }
+    }
 }
 ```
 
