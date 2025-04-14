@@ -54,3 +54,16 @@ app.UseExceptionHandler(errorApp =>
     });
 });
 ```
+
+В асинхронных методах исключения **не теряются**, но их нужно правильно ловить:
+
+Можно создавать свои типы исключений для разных сценариев:
+```csharp
+public class NotFoundException : Exception
+{
+    public NotFoundException(string message) : base(message) { }
+}
+
+// Использование:
+throw new NotFoundException("User not found");
+```
