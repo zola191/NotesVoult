@@ -57,7 +57,7 @@
 - **Хранение пар "ключ-значение"**: `IDictionary<TKey, TValue>`, `Dictionary<TKey, TValue>`.
 - **Фиксированные коллекции**: `Array`.
 - **Многопоточность**: `ConcurrentDictionary<TKey, TValue>`, `ConcurrentQueue<T>`, `ConcurrentStack<T>`.
-- **Частые вставки/удаления**: `LinkedList<T>`.
+- **Частые вставки/удаления  в середине коллекции **: `LinkedList<T>`.
 - **Очереди задач**: `Queue<T>`, `ConcurrentQueue<T>`.
 - **Стеки**: `Stack<T>`, `ConcurrentStack<T>`.
 - **Уникальные элементы**: `HashSet<T>`, `SortedSet<T>`.
