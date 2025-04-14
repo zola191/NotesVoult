@@ -89,7 +89,45 @@ public class CategoryDto // DTO
         }
     }
 }
+
+
+public CategoryDto MapToDto(Category category)
+{
+    return new CategoryDto.Builder()
+        .WithId(category.Id)
+        .WithName(category.Name.Trim())
+        .WithDescription(category.Description)
+        .Build();
+}
+
+
+public record CategoryDto
+{
+    public Guid Id { get; init; }
+    public string Name { get; init; }
+    public string Description { get; init; }
+
+    public class Builder
+    {
+        private Guid _id;
+        private string _name;
+        private string _description;
+
+        public Builder WithId(Guid id) => this with { _id = id };
+        public Builder WithName(string name) => this with { _name = name };
+        public Builder WithDescription(string desc) => this with { _description = desc };
+
+        public CategoryDto Build() => new()
+        {
+            Id = _id,
+            Name = _name ?? throw new ArgumentNullException(nameof(_name)),
+            Description = _description
+        };
+    }
+}
 ```
+
+Builder стоит использовать, когда сложность маппинга превышает стоимость поддержки дополнительного кода. Для простых DTO (до 5 полей) достаточно прямого присвоения.
 
 ## 3. **Использование AutoMapper**
 AutoMapper — популярная библиотека, которая автоматизирует процесс маппинга. Она особенно удобна для сложных моделей с вложенными объектами.
