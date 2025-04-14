@@ -22,6 +22,24 @@ public static CategoryDto ToDto(Category entity) => new()
 };
 ```
 
+**Плюсы:**
+- Максимальная производительность
+- Полный контроль над логикой
+
+```csharp
+public record CategoryDto(Guid Id, string Name, string Description);
+
+// Использование:
+var dto = new CategoryDto(entity.Id, entity.Name, entity.Description);
+```
+
+**Идеально для:**
+- Неизменяемых моделей
+- Value-объектов
+
+
+
+
 ### 2. **Использование AutoMapper**
 AutoMapper — популярная библиотека, которая автоматизирует процесс маппинга. Она особенно удобна для сложных моделей с вложенными объектами.
 #### Когда использовать:
