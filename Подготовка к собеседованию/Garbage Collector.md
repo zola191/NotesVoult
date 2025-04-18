@@ -1,4 +1,4 @@
 #CSharpInterviewFlashcards
 
-## 1. 
+## 1. Что такое Garbage Collector
 ?
