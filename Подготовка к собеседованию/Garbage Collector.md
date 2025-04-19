@@ -135,7 +135,7 @@ GC.Collect(2, GCCollectionMode.Forced, blocking: true);
 SOH - Small Object Heap мене 85 кбайт
 LOH - Large Object Heap более 85 кбайт
 POH - Pinned Object Heap начиная .Net 5 (куча закрепленных объектов, объекты с фиксированным адресом памяти)
-FOH - Fixed Object Heap начиная .Net 8
+FOH - Fixed Object Heap начиная .Net 8 (объекты которые живут на протяжении всей жизни приложения и не из POH)
 
 ## Как работает GC?
 1. **Пометка (Marking)**: GC обходит граф объектов, помечая используемые.\
