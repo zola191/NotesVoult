@@ -1,5 +1,3 @@
-# Inversion of Control (IoC) и Dependency Injection (DI)
-
 ## Основные понятия
 
 ### **Inversion of Control (IoC)**
