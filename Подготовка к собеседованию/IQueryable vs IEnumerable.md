@@ -131,3 +131,54 @@ SELECT TOP 10 * FROM Users
 WHERE Age > 18 
 ORDER BY Name
 ```
+
+1. Почему `IQueryable` наследуется от `IEnumerable`?
+    Позволяет использовать IQueryable везде, где ожидается IEnumerable
+2. Что произойдет, если смешать `IEnumerable` и `IQueryable` без `AsEnumerable()`?
+    - Часть запроса выполнится на сервере, а часть - в памяти
+**Пример опасного кода:**
+```csharp
+var results = db.Users
+           .Where(u => u.Age > 18) // IQueryable (SQL)
+           .Where(u => ComplexCheck(u)) // IEnumerable (в памяти!)
+           .ToList();
+```
+➡️ **Последствия:**
+	1. Сначала выполнится `SELECT * FROM Users WHERE Age > 18` (загрузка ВСЕХ подходящих записей)
+	2. Затем фильтрация `ComplexCheck()` в памяти приложения
+✅ **Решение:**
+```csharp
+var results = db.Users
+           .Where(u => u.Age > 18)
+           .AsEnumerable() // Явное переключение
+           .Where(u => ComplexCheck(u))
+           .ToList();
+```
+
+3. Как избежать N+1 проблемы в Entity Framework?
+	1. **Eager Loading** (явная загрузка):
+```csharp
+var users = db.Users
+             .Include(u => u.Posts) // JOIN в одном запросе
+             .ToList();
+```
+	2. **Projection** (выборка только нужных данных):
+```csharp
+var userDtos = db.Users
+                .Select(u => new UserDto {
+                    Name = u.Name,
+                    PostCount = u.Posts.Count // Считается в SQL
+                })
+                .ToList();
+```
+	3. **Explicit Loading** (для сложных сценариев):
+```csharp
+var user = db.Users.First();
+db.Entry(user)
+  .Collection(u => u.Posts)
+  .Query()
+  .Where(p => p.IsPublic)
+  .Load(); // Загружает по условию
+```
+4. В чем преимущество ленивого выполнения?
+Данные загружаются только при необходимости
