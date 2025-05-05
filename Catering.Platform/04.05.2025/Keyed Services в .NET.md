@@ -61,6 +61,65 @@ app.MapGet("/notify/{type}", (string type, [FromKeyedServices] INotificationServ
 
 > ⚠️ Требуется `.AddEndpointsApiExplorer()` или ASP.NET Core 8+ для атрибута `[FromKeyedServices]`.
 
+Вот переписанный вариант с использованием обычного контроллера вместо Minimal API:
+
+```csharp
+[ApiController]
+[Route("api/[controller]")]
+public class NotificationsController : ControllerBase
+{
+    private readonly INotificationService _notificationService;
+
+    public NotificationsController(
+        [FromKeyedServices("email")] INotificationService notificationService)
+    {
+        _notificationService = notificationService;
+    }
+
+    [HttpGet("{type}")]
+    public IActionResult Notify(string type)
+    {
+        _notificationService.Send($"Hello from {type}");
+        return Ok($"Notification sent via {type}");
+    }
+}
+```
+
+Или более гибкий вариант, где сервис выбирается динамически:
+
+```csharp
+[ApiController]
+[Route("api/[controller]")]
+public class NotificationsController : ControllerBase
+{
+    private readonly IServiceProvider _serviceProvider;
+
+    public NotificationsController(IServiceProvider serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
+    }
+
+    [HttpGet("{type}")]
+    public IActionResult Notify(string type)
+    {
+        var service = _serviceProvider.GetRequiredKeyedService<INotificationService>(type);
+        service.Send($"Hello from {type}");
+        return Ok($"Notification sent via {type}");
+    }
+}
+```
+
+Для работы этих примеров нужно:
+
+1. Убедиться, что у вас .NET 8+
+2. Добавить в Program.cs регистрацию контроллера:
+```csharp
+builder.Services.AddControllers();
+// ...
+app.MapControllers();
+```
+
+3. Keyed-сервисы должны быть зарегистрированы как показано в оригинальном примере.
 ---
 
 #### Либо через `IServiceProvider` напрямую:
