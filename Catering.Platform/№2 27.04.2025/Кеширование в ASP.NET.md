@@ -177,13 +177,8 @@ public IActionResult GetSensitiveData()
 - [Документация Microsoft](https://learn.microsoft.com/aspnet/core/performance/caching)
 - [Redis Best Practices](https://redis.io/docs/management/best-practices/)
 - [Книга "Caching in .NET"](https://www.manning.com/books/caching-in-dot-net)
-````
 
-**Особенности для Obsidian**:
-1. Используйте плагин `Dataview` для таблиц
-2. Добавьте теги типа `#dotnet` и `#caching`
-3. Свяжите с другими заметками через `[[ ]]`
-4. Для схем используйте Mermaid-диаграммы:
+
 
 ```mermaid
 graph TD
